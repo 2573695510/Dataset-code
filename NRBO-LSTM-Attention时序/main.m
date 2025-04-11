@@ -1,32 +1,30 @@
-%%  ÏĞÓã£ºÉî¶ÈÑ§Ï°ÓëÖÇÄÜËã·¨
-%%  Î¨Ò»¹Ù·½µêÆÌ£ºhttps://mbd.pub/o/author-aWWbm3BtZw==
-%%  Î¢ĞÅ¹«ÖÚºÅ£ºÇ¿Ê¢»úÆ÷Ñ§Ï°£¬¹Ø×¢¹«ÖÚºÅ»ñµÃ¸ü¶àÃâ·Ñ´úÂë£¡
-%%  Çå¿Õ»·¾³±äÁ¿
-warning off             % ¹Ø±Õ±¨¾¯ĞÅÏ¢
-close all               % ¹Ø±Õ¿ªÆôµÄÍ¼´°
-clear                   % Çå¿Õ±äÁ¿
-clc                     % Çå¿ÕÃüÁîĞĞ
 
-%%  µ¼ÈëÊı¾İ£¨Ê±¼äĞòÁĞµÄµ¥ÁĞÊı¾İ£©
-result = xlsread('Êı¾İ¼¯.xlsx');
+%%  æ¸…ç©ºç¯å¢ƒå˜é‡
+warning off             % å…³é—­æŠ¥è­¦ä¿¡æ¯
+close all               % å…³é—­å¼€å¯çš„å›¾çª—
+clear                   % æ¸…ç©ºå˜é‡
+clc                     % æ¸…ç©ºå‘½ä»¤è¡Œ
 
-%%  Êı¾İ·ÖÎö
-num_samples = length(result);  % Ñù±¾¸öÊı 
-kim = 6;                       % ÑÓÊ±²½³¤£¨kim¸öÀúÊ·Êı¾İ×÷Îª×Ô±äÁ¿£©
-zim =  1;                      % ¿çzim¸öÊ±¼äµã½øĞĞÔ¤²â
+%%  å¯¼å…¥æ•°æ®ï¼ˆæ—¶é—´åºåˆ—çš„å•åˆ—æ•°æ®ï¼‰
+result = xlsread('æ•°æ®é›†.xlsx');
 
-%%  »®·ÖÊı¾İ¼¯
+%%  æ•°æ®åˆ†æ
+num_samples = length(result);  % æ ·æœ¬ä¸ªæ•° 
+kim = 6;                       % å»¶æ—¶æ­¥é•¿ï¼ˆkimä¸ªå†å²æ•°æ®ä½œä¸ºè‡ªå˜é‡ï¼‰
+zim =  1;                      % è·¨zimä¸ªæ—¶é—´ç‚¹è¿›è¡Œé¢„æµ‹
+
+%%  åˆ’åˆ†æ•°æ®é›†
 for i = 1: num_samples - kim - zim + 1
     res(i, :) = [reshape(result(i: i + kim - 1), 1, kim), result(i + kim + zim - 1)];
 end
 
-%%  Êı¾İ¼¯·ÖÎö
-outdim = 1;                                  % ×îºóÒ»ÁĞÎªÊä³ö
-num_size = 0.8;                              % ÑµÁ·¼¯Õ¼Êı¾İ¼¯±ÈÀı
-num_train_s = round(num_size * num_samples); % ÑµÁ·¼¯Ñù±¾¸öÊı
-f_ = size(res, 2) - outdim;                  % ÊäÈëÌØÕ÷Î¬¶È
+%%  æ•°æ®é›†åˆ†æ
+outdim = 1;                                  % æœ€åä¸€åˆ—ä¸ºè¾“å‡º
+num_size = 0.8;                              % è®­ç»ƒé›†å æ•°æ®é›†æ¯”ä¾‹
+num_train_s = round(num_size * num_samples); % è®­ç»ƒé›†æ ·æœ¬ä¸ªæ•°
+f_ = size(res, 2) - outdim;                  % è¾“å…¥ç‰¹å¾ç»´åº¦
 
-%%  »®·ÖÑµÁ·¼¯ºÍ²âÊÔ¼¯
+%%  åˆ’åˆ†è®­ç»ƒé›†å’Œæµ‹è¯•é›†
 P_train = res(1: num_train_s, 1: f_)';
 T_train = res(1: num_train_s, f_ + 1: end)';
 M = size(P_train, 2);
@@ -35,14 +33,14 @@ P_test = res(num_train_s + 1: end, 1: f_)';
 T_test = res(num_train_s + 1: end, f_ + 1: end)';
 N = size(P_test, 2);
 
-%%  Êı¾İ¹éÒ»»¯
+%%  æ•°æ®å½’ä¸€åŒ–
 [p_train, ps_input] = mapminmax(P_train, 0, 1);
 p_test = mapminmax('apply', P_test, ps_input);
 
 [t_train, ps_output] = mapminmax(T_train, 0, 1);
 t_test = mapminmax('apply', T_test, ps_output);
 
-%%  ¸ñÊ½×ª»»
+%%  æ ¼å¼è½¬æ¢
 for i = 1 : M 
     vp_train{i, 1} = p_train(:, i);
     vt_train{i, 1} = t_train(:, i);
@@ -53,188 +51,188 @@ for i = 1 : N
     vt_test{i, 1} = t_test(:, i);
 end
 
-disp('³ÌĞò¼ÆËãÁ¿´ó£¬ÔËĞĞ½ÏÂıÇëÄÍĞÄµÈ´ı£¡');
+disp('ç¨‹åºè®¡ç®—é‡å¤§ï¼Œè¿è¡Œè¾ƒæ…¢è¯·è€å¿ƒç­‰å¾…ï¼');
 
-%%  ´´½¨´ıÓÅ»¯º¯Êı
+%%  åˆ›å»ºå¾…ä¼˜åŒ–å‡½æ•°
 ObjFcn = @CostFunction;
-%% ÓÅ»¯²ÎÊıÉèÖÃ
-SearchAgents = 6; % ÖÖÈºÊıÁ¿
-Max_iterations = 10 ; % µü´ú´ÎÊı
-lowerbound = [1e-6,1e-5,4 ];%Èı¸ö²ÎÊıµÄÏÂÏŞ
-upperbound = [1e-2,1e-1,100 ];%Èı¸ö²ÎÊıµÄÉÏÏŞ
-dimension = 3;%ÊıÁ¿£¬¼´ÒªÓÅ»¯µÄLSTM²ÎÊı¸öÊı
+%% ä¼˜åŒ–å‚æ•°è®¾ç½®
+SearchAgents = 6; % ç§ç¾¤æ•°é‡
+Max_iterations = 10 ; % è¿­ä»£æ¬¡æ•°
+lowerbound = [1e-6,1e-5,4 ];%ä¸‰ä¸ªå‚æ•°çš„ä¸‹é™
+upperbound = [1e-2,1e-1,100 ];%ä¸‰ä¸ªå‚æ•°çš„ä¸Šé™
+dimension = 3;%æ•°é‡ï¼Œå³è¦ä¼˜åŒ–çš„LSTMå‚æ•°ä¸ªæ•°
 
-%% ÓÅ»¯LSTM
+%% ä¼˜åŒ–LSTM
 [Best_score,Best_pos,Convergence_curve]=NRBO(SearchAgents,Max_iterations,lowerbound,upperbound,dimension,ObjFcn);
 
-%%  µÃµ½×îÓÅ²ÎÊı
-NumOfUnits       = round( Best_pos(1,3));       % ×î¼ÑÒş²Ø²ã½ÚµãÊı
-InitialLearnRate = Best_pos(1,2);               % ×î¼Ñ³õÊ¼Ñ§Ï°ÂÊ
-L2Regularization = Best_pos(1,1);               % ×î¼ÑL2ÕıÔò»¯ÏµÊı
+%%  å¾—åˆ°æœ€ä¼˜å‚æ•°
+NumOfUnits       = round( Best_pos(1,3));       % æœ€ä½³éšè—å±‚èŠ‚ç‚¹æ•°
+InitialLearnRate = Best_pos(1,2);               % æœ€ä½³åˆå§‹å­¦ä¹ ç‡
+L2Regularization = Best_pos(1,1);               % æœ€ä½³L2æ­£åˆ™åŒ–ç³»æ•°
 
-%%  ´´½¨ÍøÂç£¬
+%%  åˆ›å»ºç½‘ç»œï¼Œ
 layers = [ ...
-    sequenceInputLayer(size(P_train,1))              % ÊäÈë²ã,¼´ÊäÈëµÄÌØÕ÷±äÁ¿¸öÊı
-    lstmLayer(NumOfUnits)                            % lstm²ã
-    selfAttentionLayer(1,2)                          % ´´½¨Ò»¸öµ¥Í·£¬2¸ö¼üºÍ²éÑ¯Í¨µÀµÄ×Ô×¢ÒâÁ¦²ã 
-    reluLayer                                        % Relu¼¤»î²ã
-    fullyConnectedLayer(outdim)                      % È«Á¬½Ó²ã
-    regressionLayer];                                % »Ø¹é²ã
+    sequenceInputLayer(size(P_train,1))              % è¾“å…¥å±‚,å³è¾“å…¥çš„ç‰¹å¾å˜é‡ä¸ªæ•°
+    lstmLayer(NumOfUnits)                            % lstmå±‚
+    selfAttentionLayer(1,2)                          % åˆ›å»ºä¸€ä¸ªå•å¤´ï¼Œ2ä¸ªé”®å’ŒæŸ¥è¯¢é€šé“çš„è‡ªæ³¨æ„åŠ›å±‚ 
+    reluLayer                                        % Reluæ¿€æ´»å±‚
+    fullyConnectedLayer(outdim)                      % å…¨è¿æ¥å±‚
+    regressionLayer];                                % å›å½’å±‚
 
-%  ²ÎÊıÉèÖÃ
-options = trainingOptions('adam', ...                 % ÓÅ»¯Ëã·¨Adam
-    'MaxEpochs', 400, ...                             % ×î´óÑµÁ·´ÎÊı
-    'GradientThreshold', 1, ...                       % Ìİ¶ÈãĞÖµ
-    'InitialLearnRate', InitialLearnRate, ...         % ³õÊ¼Ñ§Ï°ÂÊ
-    'LearnRateSchedule', 'piecewise', ...             % Ñ§Ï°ÂÊµ÷Õû
-    'LearnRateDropPeriod', 350, ...                   % ÑµÁ·850´Îºó¿ªÊ¼µ÷ÕûÑ§Ï°ÂÊ
-    'LearnRateDropFactor',0.2, ...                    % Ñ§Ï°ÂÊµ÷ÕûÒò×Ó
-    'L2Regularization', L2Regularization, ...         % ÕıÔò»¯²ÎÊı
-    'ExecutionEnvironment', 'cpu',...                 % ÑµÁ·»·¾³
-    'Verbose', 0, ...                                 % ¹Ø±ÕÓÅ»¯¹ı³Ì
-    'Plots', 'training-progress');                    % »­³öÇúÏß
+%  å‚æ•°è®¾ç½®
+options = trainingOptions('adam', ...                 % ä¼˜åŒ–ç®—æ³•Adam
+    'MaxEpochs', 400, ...                             % æœ€å¤§è®­ç»ƒæ¬¡æ•°
+    'GradientThreshold', 1, ...                       % æ¢¯åº¦é˜ˆå€¼
+    'InitialLearnRate', InitialLearnRate, ...         % åˆå§‹å­¦ä¹ ç‡
+    'LearnRateSchedule', 'piecewise', ...             % å­¦ä¹ ç‡è°ƒæ•´
+    'LearnRateDropPeriod', 350, ...                   % è®­ç»ƒ850æ¬¡åå¼€å§‹è°ƒæ•´å­¦ä¹ ç‡
+    'LearnRateDropFactor',0.2, ...                    % å­¦ä¹ ç‡è°ƒæ•´å› å­
+    'L2Regularization', L2Regularization, ...         % æ­£åˆ™åŒ–å‚æ•°
+    'ExecutionEnvironment', 'cpu',...                 % è®­ç»ƒç¯å¢ƒ
+    'Verbose', 0, ...                                 % å…³é—­ä¼˜åŒ–è¿‡ç¨‹
+    'Plots', 'training-progress');                    % ç”»å‡ºæ›²çº¿
 
-%%  ÑµÁ·
+%%  è®­ç»ƒ
 net = trainNetwork(vp_train, vt_train, layers, options);
 
-%%  Ô¤²â
+%%  é¢„æµ‹
 t_sim1 = predict(net, vp_train); 
 t_sim2 = predict(net, vp_test); 
 
-%%  Êı¾İ·´¹éÒ»»¯
+%%  æ•°æ®åå½’ä¸€åŒ–
 T_sim1 = mapminmax('reverse', t_sim1, ps_output);
 T_sim2 = mapminmax('reverse', t_sim2, ps_output);
 
-%%  Êı¾İ¸ñÊ½×ª»»
+%%  æ•°æ®æ ¼å¼è½¬æ¢
 T_sim1 = cell2mat(T_sim1);
 T_sim2 = cell2mat(T_sim2);
 T_sim1 = double(T_sim1');
 T_sim2 = double(T_sim2');
 
-%%  »æÍ¼
-%%  ÊÊÓ¦¶ÈÇúÏß
+%%  ç»˜å›¾
+%%  é€‚åº”åº¦æ›²çº¿
 figure
 plot(Convergence_curve,'b-', 'LineWidth', 1.5);
 title('NRBO-LSTM-Attention', 'FontSize', 10);
-xlabel('µü´ú´ÎÊı', 'FontSize', 10);
-ylabel('ÊÊÓ¦¶ÈÖµ', 'FontSize', 10);
+xlabel('è¿­ä»£æ¬¡æ•°', 'FontSize', 10);
+ylabel('é€‚åº”åº¦å€¼', 'FontSize', 10);
 grid off
 set(gcf,'color','w')
 
-%% ²âÊÔ¼¯½á¹û
+%% æµ‹è¯•é›†ç»“æœ
 figure;
-plotregression(T_test,T_sim2,'»Ø¹éÍ¼');
+plotregression(T_test,T_sim2,'å›å½’å›¾');
 set(gcf,'color','w')
 figure;
-ploterrhist(T_test-T_sim2,'Îó²îÖ±·½Í¼');
+ploterrhist(T_test-T_sim2,'è¯¯å·®ç›´æ–¹å›¾');
 set(gcf,'color','w')
 
-%%  ¾ù·½¸ùÎó²î RMSE
+%%  å‡æ–¹æ ¹è¯¯å·® RMSE
 error1 = sqrt(sum((T_sim1 - T_train).^2)./M);
 error2 = sqrt(sum((T_test - T_sim2).^2)./N);
 
-%%  ¾ö¶¨ÏµÊı
+%%  å†³å®šç³»æ•°
 R1 = 1 - norm(T_train - T_sim1)^2 / norm(T_train - mean(T_train))^2;
 R2 = 1 - norm(T_test -  T_sim2)^2 / norm(T_test -  mean(T_test ))^2;
 
-%%  ¾ù·½Îó²î MSE
+%%  å‡æ–¹è¯¯å·® MSE
 mse1 = sum((T_sim1 - T_train).^2)./M;
 mse2 = sum((T_sim2 - T_test).^2)./N;
 
-%%  RPD Ê£ÓàÔ¤²â²Ğ²î
+%%  RPD å‰©ä½™é¢„æµ‹æ®‹å·®
 SE1=std(T_sim1-T_train);
 RPD1=std(T_train)/SE1;
 SE=std(T_sim2-T_test);
 RPD2=std(T_test)/SE;
 
-%% Æ½¾ù¾ø¶ÔÎó²îMAE
+%% å¹³å‡ç»å¯¹è¯¯å·®MAE
 MAE1 = mean(abs(T_train - T_sim1));
 MAE2 = mean(abs(T_test - T_sim2));
 
-%% Æ½¾ù¾ø¶Ô°Ù·Ö±ÈÎó²îMAPE
+%% å¹³å‡ç»å¯¹ç™¾åˆ†æ¯”è¯¯å·®MAPE
 MAPE1 = mean(abs((T_train - T_sim1)./T_train));
 MAPE2 = mean(abs((T_test - T_sim2)./T_test));
 
-%%  ÑµÁ·¼¯»æÍ¼
+%%  è®­ç»ƒé›†ç»˜å›¾
 figure
 plot(1:M,T_train,'r-',1:M,T_sim1,'b-','LineWidth',1.5)
-legend('ÕæÊµÖµ','NRBO-LSTM-AttentionÔ¤²âÖµ')
-xlabel('Ô¤²âÑù±¾')
-ylabel('Ô¤²â½á¹û')
-string={'ÑµÁ·¼¯Ô¤²â½á¹û¶Ô±È';['(R^2 =' num2str(R1) ' RMSE= ' num2str(error1) ' MSE= ' num2str(mse1) ' RPD= ' num2str(RPD1) ')' ]};
+legend('çœŸå®å€¼','NRBO-LSTM-Attentioné¢„æµ‹å€¼')
+xlabel('é¢„æµ‹æ ·æœ¬')
+ylabel('é¢„æµ‹ç»“æœ')
+string={'è®­ç»ƒé›†é¢„æµ‹ç»“æœå¯¹æ¯”';['(R^2 =' num2str(R1) ' RMSE= ' num2str(error1) ' MSE= ' num2str(mse1) ' RPD= ' num2str(RPD1) ')' ]};
 title(string)
 set(gcf,'color','w')
 
-%% Ô¤²â¼¯»æÍ¼
+%% é¢„æµ‹é›†ç»˜å›¾
 figure
 plot(1:N,T_test,'r-',1:N,T_sim2,'b-','LineWidth',1.5)
-legend('ÕæÊµÖµ','NRBO-LSTM-AttentionÔ¤²âÖµ')
-xlabel('Ô¤²âÑù±¾')
-ylabel('Ô¤²â½á¹û')
-string={'²âÊÔ¼¯Ô¤²â½á¹û¶Ô±È';['(R^2 =' num2str(R2) ' RMSE= ' num2str(error2)  ' MSE= ' num2str(mse2) ' RPD= ' num2str(RPD2) ')']};
+legend('çœŸå®å€¼','NRBO-LSTM-Attentioné¢„æµ‹å€¼')
+xlabel('é¢„æµ‹æ ·æœ¬')
+ylabel('é¢„æµ‹ç»“æœ')
+string={'æµ‹è¯•é›†é¢„æµ‹ç»“æœå¯¹æ¯”';['(R^2 =' num2str(R2) ' RMSE= ' num2str(error2)  ' MSE= ' num2str(mse2) ' RPD= ' num2str(RPD2) ')']};
 title(string)
 set(gcf,'color','w')
 
-%% ²âÊÔ¼¯Îó²îÍ¼
+%% æµ‹è¯•é›†è¯¯å·®å›¾
 figure  
 ERROR3=T_test-T_sim2;
 plot(T_test-T_sim2,'b-*','LineWidth',1.5)
-xlabel('²âÊÔ¼¯Ñù±¾±àºÅ')
-ylabel('Ô¤²âÎó²î')
-title('²âÊÔ¼¯Ô¤²âÎó²î')
+xlabel('æµ‹è¯•é›†æ ·æœ¬ç¼–å·')
+ylabel('é¢„æµ‹è¯¯å·®')
+title('æµ‹è¯•é›†é¢„æµ‹è¯¯å·®')
 grid on;
-legend('NRBO-LSTMÔ¤²âÊä³öÎó²î')
+legend('NRBO-LSTMé¢„æµ‹è¾“å‡ºè¯¯å·®')
 set(gcf,'color','w')
 
-%% »æÖÆÏßĞÔÄâºÏÍ¼
-%% ÑµÁ·¼¯ÄâºÏĞ§¹ûÍ¼
+%% ç»˜åˆ¶çº¿æ€§æ‹Ÿåˆå›¾
+%% è®­ç»ƒé›†æ‹Ÿåˆæ•ˆæœå›¾
 figure
 plot(T_train,T_sim1,'*r');
-xlabel('ÕæÊµÖµ')
-ylabel('Ô¤²âÖµ')
-string = {'ÑµÁ·¼¯Ğ§¹ûÍ¼';['R^2_c=' num2str(R1)  '  RMSEC=' num2str(error1) ]};
+xlabel('çœŸå®å€¼')
+ylabel('é¢„æµ‹å€¼')
+string = {'è®­ç»ƒé›†æ•ˆæœå›¾';['R^2_c=' num2str(R1)  '  RMSEC=' num2str(error1) ]};
 title(string)
 hold on ;h=lsline;
 set(h,'LineWidth',1,'LineStyle','-','Color',[1 0 1])
 set(gcf,'color','w')
-%% Ô¤²â¼¯ÄâºÏĞ§¹ûÍ¼
+%% é¢„æµ‹é›†æ‹Ÿåˆæ•ˆæœå›¾
 figure
 plot(T_test,T_sim2,'ob');
-xlabel('ÕæÊµÖµ')
-ylabel('Ô¤²âÖµ')
-string1 = {'²âÊÔ¼¯Ğ§¹ûÍ¼';['R^2_p=' num2str(R2)  '  RMSEP=' num2str(error2) ]};
+xlabel('çœŸå®å€¼')
+ylabel('é¢„æµ‹å€¼')
+string1 = {'æµ‹è¯•é›†æ•ˆæœå›¾';['R^2_p=' num2str(R2)  '  RMSEP=' num2str(error2) ]};
 title(string1)
 hold on ;h=lsline();
 set(h,'LineWidth',1,'LineStyle','-','Color',[1 0 1])
 set(gcf,'color','w')
-%% ÇóÆ½¾ù
+%% æ±‚å¹³å‡
 R3=(R1+R2)./2;
 error3=(error1+error2)./2;
-%% ×ÜÊı¾İÏßĞÔÔ¤²âÄâºÏÍ¼
+%% æ€»æ•°æ®çº¿æ€§é¢„æµ‹æ‹Ÿåˆå›¾
 tsim=[T_sim1,T_sim2]';
 S=[T_train,T_test]';
 figure
 plot(S,tsim,'ob');
-xlabel('ÕæÊµÖµ')
-ylabel('Ô¤²âÖµ')
-string1 = {'ËùÓĞÑù±¾ÄâºÏÔ¤²âÍ¼';['R^2_p=' num2str(R3)  '  RMSEP=' num2str(error3) ]};
+xlabel('çœŸå®å€¼')
+ylabel('é¢„æµ‹å€¼')
+string1 = {'æ‰€æœ‰æ ·æœ¬æ‹Ÿåˆé¢„æµ‹å›¾';['R^2_p=' num2str(R3)  '  RMSEP=' num2str(error3) ]};
 title(string1)
 hold on ;h=lsline();
 set(h,'LineWidth',1,'LineStyle','-','Color',[1 0 1])
 set(gcf,'color','w')
 
-%% ´òÓ¡³öÆÀ¼ÛÖ¸±ê
-disp('-----------------------Îó²î¼ÆËã--------------------------')
-disp('Ô¤²â¼¯µÄÆÀ¼Û½á¹ûÈçÏÂËùÊ¾£º')
-disp(['Æ½¾ù¾ø¶ÔÎó²îMAEÎª£º',num2str(MAE2)])
-disp(['¾ù·½Îó²îMSEÎª£º       ',num2str(mse2)])
-disp(['¾ù·½¸ùÎó²îRMSEPÎª£º  ',num2str(error2)])
-disp(['¾ö¶¨ÏµÊıR^2Îª£º  ',num2str(R2)])
-disp(['Ê£ÓàÔ¤²â²Ğ²îRPDÎª£º  ',num2str(RPD2)])
-disp(['Æ½¾ù¾ø¶Ô°Ù·Ö±ÈÎó²îMAPEÎª£º  ',num2str(MAPE2)])
+%% æ‰“å°å‡ºè¯„ä»·æŒ‡æ ‡
+disp('-----------------------è¯¯å·®è®¡ç®—--------------------------')
+disp('é¢„æµ‹é›†çš„è¯„ä»·ç»“æœå¦‚ä¸‹æ‰€ç¤ºï¼š')
+disp(['å¹³å‡ç»å¯¹è¯¯å·®MAEä¸ºï¼š',num2str(MAE2)])
+disp(['å‡æ–¹è¯¯å·®MSEä¸ºï¼š       ',num2str(mse2)])
+disp(['å‡æ–¹æ ¹è¯¯å·®RMSEPä¸ºï¼š  ',num2str(error2)])
+disp(['å†³å®šç³»æ•°R^2ä¸ºï¼š  ',num2str(R2)])
+disp(['å‰©ä½™é¢„æµ‹æ®‹å·®RPDä¸ºï¼š  ',num2str(RPD2)])
+disp(['å¹³å‡ç»å¯¹ç™¾åˆ†æ¯”è¯¯å·®MAPEä¸ºï¼š  ',num2str(MAPE2)])
 grid 
 
-%test Êı¾İÔ¤²âÊä³ö  ´ËÔ¤²â»á¶ªÊ§4¸ö²½³¤µÄÊı¾İ£¬ÒòÎªÓÃÇ°4¸öÊıÈ¥Ô¤²âµÄÏÂÒ»¸öÊı£¬ËùÒÔÇ°4¸öÊı¶ªÊ§ÁË£¬½ÓÏÂÀ´¹ö¶¯Ô¤²âÃ»ÎÊÌâ
+%test æ•°æ®é¢„æµ‹è¾“å‡º  æ­¤é¢„æµ‹ä¼šä¸¢å¤±4ä¸ªæ­¥é•¿çš„æ•°æ®ï¼Œå› ä¸ºç”¨å‰4ä¸ªæ•°å»é¢„æµ‹çš„ä¸‹ä¸€ä¸ªæ•°ï¼Œæ‰€ä»¥å‰4ä¸ªæ•°ä¸¢å¤±äº†ï¼Œæ¥ä¸‹æ¥æ»šåŠ¨é¢„æµ‹æ²¡é—®é¢˜
 
 m1=[T_sim1,T_sim2];
-xlswrite('Ô¤²âÊä³öÖµ.xlsx',m1); 
+xlswrite('é¢„æµ‹è¾“å‡ºå€¼.xlsx',m1); 
